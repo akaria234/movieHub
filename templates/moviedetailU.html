@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--Icon at the top of the tab-->
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>{{movie["title"]}}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/styles/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles -->
+    <link href="../static/styles/navbar-top.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    .checked {
+        color: orange;
+    }
+    .unchecked {
+        color: black;
+    }
+    </style>  
+
+</head>
+
+<body>
+  <!-- Nav Bar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <a class="navbar-brand" href="http://127.0.0.1:5000">MovieHub</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="http://127.0.0.1:5000">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://127.0.0.1:5000/movies">Movies</a>
+          </li>
+          {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="http://127.0.0.1:5000/profile">Profile</a>
+            </li>
+          {% endif %}
+        </ul>
+        <form class="form-inline mt-2 mt-md-0" method="POST">
+          <input class="form-control mr-sm-2" name="searchText" type="text" placeholder="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        {% if current_user.is_authenticated %}
+        &nbsp;&nbsp;&nbsp;
+        <button class="btn btn-primary my-2 my-sm-0" onclick="window.location.href='http://127.0.0.1:5000/logout'">Logout</button>
+        {% endif %}
+      </div>
+      <header>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+          </div>
+        </div>
+        <div class="navbar navbar-dark bg-dark box-shadow">
+          <div class="container d-flex justify-content-between">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+        </div>
+      </header>
+    </nav>
+
+  <main role="main ">
+    <section class=" text-center bg-light">
+
+      <div class="container">
+        <h1 class="jumbotron-heading">{{movie["title"]}}</h1>
+      </div>
+    </section>
+
+    <div class="album py-5 bg-light">
+      <div class="container">
+        <h2 class="jumbotron-heading">Information</h2>
+
+
+        <div class="row">
+          <div class="col-md-8">
+
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="card mb-4 box-shadow">
+                  <div class="card-body">
+                    {% if movie["rating"] %}
+                    <p>IMDb rating: {{movie["rating"]}}</p>
+                    {% endif %}
+                    {% if movie["top 250 rank"] %}
+                    <p>IMDb Rank: {{movie["top 250 rank"]}}</p>
+                    {% endif %}
+                    <p>My rating:   
+                      {% for i in range(1, 6) %}
+                        {% if checked[i-1] == 1 %}
+                          <a href="http://127.0.0.1:5000/moviedetail?id={{moviedb.imdb_id}}&checked={{i}}"><span class="fa fa-star checked"></span></a>
+                        {% else %}
+                          <a href="http://127.0.0.1:5000/moviedetail?id={{moviedb.imdb_id}}&checked={{i}}"><span class="fa fa-star unchecked"></span></a>
+                        {% endif %}
+                      {% endfor %}
+                    </p>
+                    <p>Year: {{movie["year"]}}</p>
+                    <p>Runtime: {{movie["runtimes"][0]}} mins</p>
+                    <p>Genres: 
+                    {% for i in range(0, movie["genres"]|length-1)%}
+                      {{movie["genres"][i]}},
+                    {% endfor %}
+                    {{movie["genres"][movie["genres"]|length-1]}}
+                    </p>
+                    <p>Directed by: {{movie["director"][0]["name"]}}</p>
+                    <p>Written by: 
+                    {% for i in range(0, movie["writer"]|length-1)%}
+                      {{movie["writer"][i]["name"]}},
+                    {% endfor %}
+                    {{movie["writer"][movie["writer"]|length-1]["name"]}}
+                    </p>
+                    <p>{{movie["plot outline"]}}</p>
+
+
+                    <p class="card-text"></p>
+                    <div class="d-flex justify-content-between align-items-center">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-100"></div>
+              <div class="col-md-12">
+                <div class="card mb-4 box-shadow">
+                  <div class="card-body">
+                    <h4>Cast</h4>
+                    {% for i in movie["cast"][0:20] %}
+                      <p>{{i["name"]}} as {{i.notes}}</p>
+                    {% endfor %}
+                    <p class="card-text"></p>
+                    <div class="d-flex justify-content-between align-items-center">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-100"></div>
+              <div class="col-md-12">
+                <div class="card mb-4 box-shadow" style="width: 150%">
+                  <div class="card-body">
+                    <h4>Times</h4>
+                    {% if times %}
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for cinemas">
+                    <style type="text/css">
+                      #myInput {
+                        background-image: url('https://www.w3schools.com/css/searchicon.png'); /* Add a search icon to input */
+                        background-position: 10px 12px; /* Position the search icon */
+                        background-repeat: no-repeat; /* Do not repeat the icon image */
+                        width: 100%; /* Full-width */
+                        font-size: 16px; /* Increase font-size */
+                        padding: 12px 20px 12px 40px; /* Add some padding */
+                        border: 1px solid #ddd; /* Add a grey border */
+                        margin-bottom: 12px; /* Add some space below the input */
+                      }
+                    </style>
+                    {% endif %}
+                    <div class="table-responsive">
+                    {% if times %}
+                    <table id="times" class="table table-hover" data-show-toggle="true">
+                    <tbody>
+
+                      {% for cinema in cinemas %}
+                          <tr> <td>{{cinema.name}}</td>
+                          {% for time in times %}
+                              {% if time.cinema_id == cinema.cinema_id %}
+                                  <td>
+                                    {% set child = range(7,11) | random %}
+                                    {% set adult = range(15,21)|random %}
+                                    {% set student = range(11,15)|random %}
+                                    {% set pensioner = range(11,15)|random %}
+                                    <button class="btn btn-basic" onclick="window.location.href='http://127.0.0.1:5000/payment?cinema={{cinema.name}}&time={{time.showtime}}&movie={{moviedb.name}}&child={{child}}&adult={{adult}}&student={{student}}&pensioner={{pensioner}}'">{{time.showtime}}</button>
+                                      Child: ${{child}} Adult: ${{adult}} Student: ${{student}} Pensioner: ${{pensioner}}
+                                  </td>
+                              {% endif %}
+                          {% endfor %}
+                          </tr>
+                      {% endfor %}
+                    </tbody>
+                    </table>
+                    {% else %}
+                    <h6>No times available</h6>
+                    {% endif %}
+                    </div>
+                    <p class="card-text"></p>
+                    <div class="d-flex justify-content-between align-items-center">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-100"></div>
+
+
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+              <img class="card-img-top" src="{{moviedb.poster}}" alt="Card image cap" style="width: 220 height:326">
+            </div>
+          </div>
+        </div>
+  </main>
+
+  <footer class="text-muted">
+    <div class="container">
+      <p class="float-right">
+        <a href="#">Back to top</a>
+      </p>
+    </div>
+  </footer>
+
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script>
+    window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')
+  </script>
+  <script src="../static/styles/js/vendor/popper.min.js"></script>
+  <script src="../static/styles/js/bootstrap.min.js"></script>
+  <script src="../static/js/vendor/holder.min.js"></script>
+</body>
+
+
+<script>
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("times");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
+
+
+</html>
